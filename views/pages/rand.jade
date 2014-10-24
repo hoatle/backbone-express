@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Corben')
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Nobile')
+    link(rel='stylesheet', href='/public/main.css')
+    script(src='/public/bundle.js')
+  body
+    .container
+      p Your uuid: #{token}
+      hr
+      ul
+        each shout in shouts
+          li #{shout.name} - #{shout.shout}

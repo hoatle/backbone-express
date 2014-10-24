@@ -1,0 +1,22 @@
+{
+  "name": "backbone-express",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.9.7",
+    "jade": "^1.7.0",
+    "debug": "latest",
+    "dotenv": "^0.4.0",
+    "mongoose": "latest",
+    "morgan": "latest"
+  },
+  "devDependencies": {
+    "nodemon": "^1.2.1"
+  }
+}
