@@ -1,0 +1,5 @@
+<h1>Shouts</h1>
+<% _.each(shouts, function (shout) { %>
+  <br><%= shout.get('name') %>
+  - <%= shout.get('shout') %>
+<% }); %>

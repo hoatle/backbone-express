@@ -48,7 +48,7 @@ gulp.task('server', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch('src/js/**/*.js', ['browserify']);
+  gulp.watch('src/js/**/*', ['browserify']);
 });
 
 gulp.task('default', ['server', 'browserify', 'watch']);

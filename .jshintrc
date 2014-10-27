@@ -27,12 +27,6 @@
   "maxlen":        79,
   "esnext":        true,
   "node":          true,
-  "jquery":        true,
-  "browser":       true,
-  "globals": {
-      "$": false,
-      "_": false,
-      "Backbone": false,
-      "jQuery": false
-    }
+  "browser":       true
+
 }
