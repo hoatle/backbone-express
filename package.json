@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "browserify": {
-      "transform": [ "jstify" ]
-    },
+    "transform": [
+      "jstify"
+    ]
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "backbone": "^1.1.2",
+    "body-parser": "^1.9.2",
     "bootstrap": "^3.2.0",
     "debug": "latest",
     "dotenv": "^0.4.0",

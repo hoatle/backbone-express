@@ -1,10 +1,12 @@
 'use strict'; 
 
-var express = require('express');
-var path = require('path');
-var mongoose      = require('mongoose');
-var dotenv        = require('dotenv');
-var fs            = require('fs');
+var express    = require('express');
+var path       = require('path');
+var mongoose   = require('mongoose');
+var dotenv     = require('dotenv');
+var fs         = require('fs');
+var bodyParser = require('body-parser');
+
 
 // setup dotenv
 dotenv.load();
@@ -30,6 +32,13 @@ app.set('view engine', 'jade');
 
 // middleware
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+// setup different api
+require('./api/shouts')(app);
 
 // setup routes
 require('./config/routes')(app);

@@ -12245,25 +12245,15 @@ module.exports=require(3)
 'use strict';
 
 var $ = require('jquery');
-var _ = require('underscore');
 var Backbone = require('backbone');
 Backbone.$ = $;
-
-// Views
-// var HomeView = require('../views/home');
-
-// Templates
-var shoutIndex
-
 
 
 var Shouts = Backbone.Collection.extend({
   url: 'http://localhost:3000/shouts'
 });
 
-
-
-var HomeView = Backbone.View.extend({
+exports.home = Backbone.View.extend({
 
     el: '#app',
 
@@ -12272,9 +12262,66 @@ var HomeView = Backbone.View.extend({
     },
 
     render: function () {
+      // var that = this;
+      // var shouts = new Shouts();
+
+      // shouts.fetch({
+      //   success: function (shouts) {
+      //     var template = require('../templates/shouts/index.html');
+      //     that.$el.html(template({ shouts: shouts.models }));
+      //     console.log(shouts.models);
+      //   }
+      // });
+      $('#app').html('hello');
+    }
+});
+
+
+exports.home2 = function() {
+  $('#app').html('we in the home 2 controller.');
+};
+
+
+
+},{"backbone":2,"jquery":4}],7:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = $;
+
+$.fn.serializeObject = function() {
+  var o = {};
+  var a = this.serializeArray();
+  $.each(a, function() {
+      if (o[this.name] !== undefined) {
+          if (!o[this.name].push) {
+              o[this.name] = [o[this.name]];
+          }
+          o[this.name].push(this.value || '');
+      } else {
+          o[this.name] = this.value || '';
+      }
+  });
+  return o;
+};
+
+var Shouts = Backbone.Collection.extend({
+  url: '/api/shouts'
+});
+
+var Shout = Backbone.Model.extend({
+  urlRoot: '/api/shouts'
+});
+
+var ShoutIndexView = Backbone.View.extend({
+    el: '#app',
+    initialize: function () {
+        this.render();
+    },
+    render: function () {
       var that = this;
       var shouts = new Shouts();
-
       shouts.fetch({
         success: function (shouts) {
           var template = require('../templates/shouts/index.html');
@@ -12285,36 +12332,70 @@ var HomeView = Backbone.View.extend({
     }
 });
 
+var ShoutEditView = Backbone.View.extend({
+  el: '#app',
+  // events: {'click #add': 'submitAdd'},
+  events: {'submit': 'save'},
+  initialize: function () {
+      this.render();
+  },
+  render: function () {
+    var template = require('../templates/shouts/new.html');
+    this.$el.html(template());
+  },
+  save: function(e) {
+    console.log(e);
+    e.preventDefault();
+    var data = $('#foo').serializeObject();
+    console.log(data);
+    var shout = new Shout();
+    // var data = {shout: 'blue'};
+    shout.save(data, {
+        success: function (shout) {
+            console.log(shout.toJSON());
+        }
+    });
+    console.log('trying to save this shit');
+  }
+});
 
+var ShoutShowView = Backbone.View.extend({
+  el: '#app',
+  initialize: function () {
+      this.render();
+  },
+  render: function () {
+    var shout = new Shout();
+    var shoutDetails = {shout: 'hello'};
+    // shout.save(data);
 
+    shout.save(shoutDetails, {
+        success: function (shout) {
+            console.log(shout.toJSON());
+        }
+    });
 
-exports.home = function() {
-  var homeView = new HomeView();
-};
-
-exports.home2 = function() {
-  $('#app').html('we in the home 2 controller.');
-};
-
-
-
-},{"../templates/shouts/index.html":9,"backbone":2,"jquery":4,"underscore":5}],7:[function(require,module,exports){
-'use strict';
-
-var $ = require('jquery');
+    var template = require('../templates/shouts/new.html');
+    this.$el.html(template());
+  }
+});
 
 exports.index = function() {
-  $('#app').html('list shouts<br><a href=\'#shouts/new\'>new shout</a>');
+  var shoutIndexView = new ShoutIndexView();
 };
 
 exports.new = function() {
-  $('#app').html('new form for shout');
+  var shoutEditView = new ShoutEditView();
 };
 
-exports.create = function() {
-  $('#app').html('add shout to db and redirect to list');
+exports.show = function() {
+  var shoutShowView = new ShoutShowView();
 };
-},{"jquery":4}],8:[function(require,module,exports){
+
+
+
+
+},{"../templates/shouts/index.html":9,"../templates/shouts/new.html":10,"backbone":2,"jquery":4}],8:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
@@ -12335,12 +12416,18 @@ var shoutsController = require('./controllers/shouts');
 module.exports = Backbone.Router.extend({
 
   routes: {
-    '': homeController.home,
+    '': new homeController.home(),
     'home2': homeController.home2,
     'faq': 'faq',
+
     'shouts': shoutsController.index,
     'shouts/new': shoutsController.new,
-    'shouts/create': shoutsController.create
+    // 'shouts/create': shoutsController.create,
+    'shouts/:id': shoutsController.show,
+    'shouts/:id/edit': shoutsController.edit,
+    // 'shouts/:id/update': shoutsController.update,
+    // 'shouts/:id/delete': shoutsController.destroy,
+    // 'shouts/:id/like': shoutsController.like, 
 
   },
 
@@ -12349,18 +12436,30 @@ module.exports = Backbone.Router.extend({
   }
 
 });
-},{"./controllers/home":6,"./controllers/shouts":7,"./templates/static/faq.html":10,"backbone":2,"jquery":4}],9:[function(require,module,exports){
+},{"./controllers/home":6,"./controllers/shouts":7,"./templates/static/faq.html":11,"backbone":2,"jquery":4}],9:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<h1>Shouts</h1>';
+__p+='<h1>Shouts</h1><a href="#/shouts/new">New</a><hr>';
  _.each(shouts, function (shout) { 
-__p+='<br>'+
+__p+='<p><b>'+
 ((__t=( shout.get('name') ))==null?'':__t)+
-'-'+
+':</b>'+
 ((__t=( shout.get('shout') ))==null?'':__t)+
-'';
+'<br><a href="#shout/'+
+((__t=( shout.get('_id') ))==null?'':__t)+
+'">View</a> | <a href="#shout/'+
+((__t=( shout.get('_id') ))==null?'':__t)+
+'/edit">Edit</a> | <a href="#shout/'+
+((__t=( shout.get('_id') ))==null?'':__t)+
+'/delete">Delete</a> | <a href="#shout/'+
+((__t=( shout.get('_id') ))==null?'':__t)+
+'/reply">Reply</a> | <a href="#shout/'+
+((__t=( shout.get('_id') ))==null?'':__t)+
+'/like">Like</a> |'+
+((__t=( shout.get('numLikes') ))==null?'':__t)+
+' likes</p>';
  }); 
 __p+='';
 }
@@ -12368,6 +12467,16 @@ return __p;
 };
 
 },{"underscore":5}],10:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='<form class="edit-shout-form" id="foo"><p>Name:<br><input type="text" name="name"></p><p>Shout:<br><input type="text" name="shout"></p><p><button id="submit">Submit</button></p></form>';
+}
+return __p;
+};
+
+},{"underscore":5}],11:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};

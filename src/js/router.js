@@ -18,12 +18,18 @@ var shoutsController = require('./controllers/shouts');
 module.exports = Backbone.Router.extend({
 
   routes: {
-    '': homeController.home,
+    '': new homeController.home(),
     'home2': homeController.home2,
     'faq': 'faq',
+
     'shouts': shoutsController.index,
     'shouts/new': shoutsController.new,
-    'shouts/create': shoutsController.create
+    // 'shouts/create': shoutsController.create,
+    'shouts/:id': shoutsController.show,
+    'shouts/:id/edit': shoutsController.edit,
+    // 'shouts/:id/update': shoutsController.update,
+    // 'shouts/:id/delete': shoutsController.destroy,
+    // 'shouts/:id/like': shoutsController.like, 
 
   },
 
