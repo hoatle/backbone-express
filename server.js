@@ -40,7 +40,5 @@ app.use(bodyParser.urlencoded({
 // setup different api
 require('./api/shouts')(app);
 
-// setup routes
-require('./config/routes')(app);
 
 app.listen(3000);
