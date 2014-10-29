@@ -10,10 +10,6 @@ var faqTemplate = require('./templates/static/faq.html');
 // Controllers
 var homeController = require('./controllers/home');
 var shoutsController = require('./controllers/shouts');
-// var shoutsController = require('./controllers/shouts');
-
-// Models
-// var models = require('./models/memory/employee');
 
 module.exports = Backbone.Router.extend({
 

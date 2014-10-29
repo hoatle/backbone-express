@@ -8,7 +8,7 @@ Backbone.$ = $;
 var Router = require('./router');
 var router = new Router();
 
-$("body").on("click", ".back-button", function (event) {
+$('body').on('click', '.back-button', function (event) {
     event.preventDefault();
     window.history.back();
 });
@@ -12249,10 +12249,6 @@ var Backbone = require('backbone');
 Backbone.$ = $;
 
 
-var Shouts = Backbone.Collection.extend({
-  url: 'http://localhost:3000/shouts'
-});
-
 exports.home = Backbone.View.extend({
 
     el: '#app',
@@ -12262,17 +12258,7 @@ exports.home = Backbone.View.extend({
     },
 
     render: function () {
-      // var that = this;
-      // var shouts = new Shouts();
-
-      // shouts.fetch({
-      //   success: function (shouts) {
-      //     var template = require('../templates/shouts/index.html');
-      //     that.$el.html(template({ shouts: shouts.models }));
-      //     console.log(shouts.models);
-      //   }
-      // });
-      $('#app').html('hello');
+      $('#app').html('Welcome home.');
     }
 });
 
@@ -12290,6 +12276,11 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
+// ???
+// var Router = require('../router');
+// var router = new Router();
+
+// Need to put this in /src/js/lib
 $.fn.serializeObject = function() {
   var o = {};
   var a = this.serializeArray();
@@ -12334,7 +12325,6 @@ var ShoutIndexView = Backbone.View.extend({
 
 var ShoutEditView = Backbone.View.extend({
   el: '#app',
-  // events: {'click #add': 'submitAdd'},
   events: {'submit': 'save'},
   initialize: function () {
       this.render();
@@ -12344,41 +12334,29 @@ var ShoutEditView = Backbone.View.extend({
     this.$el.html(template());
   },
   save: function(e) {
-    console.log(e);
     e.preventDefault();
     var data = $('#foo').serializeObject();
-    console.log(data);
     var shout = new Shout();
-    // var data = {shout: 'blue'};
     shout.save(data, {
         success: function (shout) {
             console.log(shout.toJSON());
+            // not sure how to bring router constructor in with Browserify
+            // router.navigate('', {trigger: true});
         }
     });
-    console.log('trying to save this shit');
   }
 });
 
-var ShoutShowView = Backbone.View.extend({
-  el: '#app',
-  initialize: function () {
-      this.render();
-  },
-  render: function () {
-    var shout = new Shout();
-    var shoutDetails = {shout: 'hello'};
-    // shout.save(data);
-
-    shout.save(shoutDetails, {
-        success: function (shout) {
-            console.log(shout.toJSON());
-        }
-    });
-
-    var template = require('../templates/shouts/new.html');
-    this.$el.html(template());
-  }
-});
+// var ShoutShowView = Backbone.View.extend({
+//   el: '#app',
+//   initialize: function () {
+//       this.render();
+//   },
+//   render: function () {
+//     var template = require('../templates/shouts/new.html');
+//     this.$el.html(template());
+//   }
+// });
 
 exports.index = function() {
   var shoutIndexView = new ShoutIndexView();
@@ -12388,9 +12366,9 @@ exports.new = function() {
   var shoutEditView = new ShoutEditView();
 };
 
-exports.show = function() {
-  var shoutShowView = new ShoutShowView();
-};
+// exports.show = function() {
+//   var shoutShowView = new ShoutShowView();
+// };
 
 
 
@@ -12408,10 +12386,6 @@ var faqTemplate = require('./templates/static/faq.html');
 // Controllers
 var homeController = require('./controllers/home');
 var shoutsController = require('./controllers/shouts');
-// var shoutsController = require('./controllers/shouts');
-
-// Models
-// var models = require('./models/memory/employee');
 
 module.exports = Backbone.Router.extend({
 

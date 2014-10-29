@@ -5,10 +5,6 @@ var Backbone = require('backbone');
 Backbone.$ = $;
 
 
-var Shouts = Backbone.Collection.extend({
-  url: 'http://localhost:3000/shouts'
-});
-
 exports.home = Backbone.View.extend({
 
     el: '#app',
@@ -18,17 +14,7 @@ exports.home = Backbone.View.extend({
     },
 
     render: function () {
-      // var that = this;
-      // var shouts = new Shouts();
-
-      // shouts.fetch({
-      //   success: function (shouts) {
-      //     var template = require('../templates/shouts/index.html');
-      //     that.$el.html(template({ shouts: shouts.models }));
-      //     console.log(shouts.models);
-      //   }
-      // });
-      $('#app').html('hello');
+      $('#app').html('Welcome home.');
     }
 });
 
