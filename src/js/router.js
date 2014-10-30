@@ -31,7 +31,6 @@ var Router = Backbone.Router.extend({
 
   faq: function () {
     $('#app').html(faqTemplate({foo: 'bar'}));
-    this.navigate('/shouts', { trigger: true });
   }
 
 });
