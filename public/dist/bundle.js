@@ -5,8 +5,8 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
-var Router = require('./router');
-var router = new Router();
+var router = require('./router');
+// var router = new Router();
 
 $('body').on('click', '.back-button', function (event) {
     event.preventDefault();
@@ -12277,7 +12277,7 @@ var Backbone = require('backbone');
 Backbone.$ = $;
 
 // ???
-// var Router = require('../router');
+var router = require('../router');
 // var router = new Router();
 
 // Need to put this in /src/js/lib
@@ -12340,8 +12340,9 @@ var ShoutEditView = Backbone.View.extend({
     shout.save(data, {
         success: function (shout) {
             console.log(shout.toJSON());
+            console.dir(router);
             // not sure how to bring router constructor in with Browserify
-            // router.navigate('', {trigger: true});
+            router.navigate('/shouts', {trigger: true});
         }
     });
   }
@@ -12373,7 +12374,7 @@ exports.new = function() {
 
 
 
-},{"../templates/shouts/index.html":9,"../templates/shouts/new.html":10,"backbone":2,"jquery":4}],8:[function(require,module,exports){
+},{"../router":8,"../templates/shouts/index.html":9,"../templates/shouts/new.html":10,"backbone":2,"jquery":4}],8:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
@@ -12387,7 +12388,7 @@ var faqTemplate = require('./templates/static/faq.html');
 var homeController = require('./controllers/home');
 var shoutsController = require('./controllers/shouts');
 
-module.exports = Backbone.Router.extend({
+var Router = Backbone.Router.extend({
 
   routes: {
     '': new homeController.home(),
@@ -12407,9 +12408,12 @@ module.exports = Backbone.Router.extend({
 
   faq: function () {
     $('#app').html(faqTemplate({foo: 'bar'}));
+    this.navigate('/shouts', { trigger: true });
   }
 
 });
+
+module.exports = new Router();
 },{"./controllers/home":6,"./controllers/shouts":7,"./templates/static/faq.html":11,"backbone":2,"jquery":4}],9:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){

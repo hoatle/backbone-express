@@ -5,7 +5,7 @@ var Backbone = require('backbone');
 Backbone.$ = $;
 
 // ???
-// var Router = require('../router');
+var router = require('../router');
 // var router = new Router();
 
 // Need to put this in /src/js/lib
@@ -68,8 +68,9 @@ var ShoutEditView = Backbone.View.extend({
     shout.save(data, {
         success: function (shout) {
             console.log(shout.toJSON());
+            console.dir(router);
             // not sure how to bring router constructor in with Browserify
-            // router.navigate('', {trigger: true});
+            router.navigate('/shouts', {trigger: true});
         }
     });
   }

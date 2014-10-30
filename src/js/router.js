@@ -11,7 +11,7 @@ var faqTemplate = require('./templates/static/faq.html');
 var homeController = require('./controllers/home');
 var shoutsController = require('./controllers/shouts');
 
-module.exports = Backbone.Router.extend({
+var Router = Backbone.Router.extend({
 
   routes: {
     '': new homeController.home(),
@@ -31,6 +31,9 @@ module.exports = Backbone.Router.extend({
 
   faq: function () {
     $('#app').html(faqTemplate({foo: 'bar'}));
+    this.navigate('/shouts', { trigger: true });
   }
 
 });
+
+module.exports = new Router();
