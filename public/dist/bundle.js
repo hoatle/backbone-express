@@ -12286,10 +12286,6 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
-// ???
-// var router = require('../router');
-// var router = new Router();
-
 // Need to put this in /src/js/lib
 $.fn.serializeObject = function() {
   var o = {};
@@ -12336,23 +12332,23 @@ var Index = Backbone.View.extend({
 var Edit = Backbone.View.extend({
   el: '#app',
   events: {'submit': 'save'},
-  initialize: function () {
-      this.render();
+  initialize: function (options) {
+      this.render(options);
   },
   render: function (options) {
     var that = this;
-    if(options.id){
+    if(options.id) {
       var shout = new Shout({id: options.id});
       shout.fetch({
         success: function (shout) {
-          var template = require('../templates/shouts/new.html');
+          var template = require('../templates/shouts/edit.html');
           that.$el.html(template({shout: shout}));
         }
       });
 
     }else{
-      var template = require('../templates/shouts/new.html');
-      this.$el.html(template());
+      var template = require('../templates/shouts/edit.html');
+      this.$el.html(template({shout: null}));
     }
   },
   save: function(e) {
@@ -12360,9 +12356,7 @@ var Edit = Backbone.View.extend({
     var data = $('#foo').serializeObject();
     var shout = new Shout();
     shout.save(data, {
-        success: function (shout) {
-            console.log(shout.toJSON());
-            console.dir(router);
+        success: function () {
             router.navigate('/shouts', {trigger: true});
         }
     });
@@ -12384,12 +12378,8 @@ exports.index = function() {
   new Index();
 };
 
-exports.new = function() {
-  new Edit();
-};
-
-exports.edit = function() {
-  new Edit();
+exports.edit = function(id) {
+  new Edit({id: id});
 };
 
 exports.show = function() {
@@ -12399,7 +12389,7 @@ exports.show = function() {
 
 
 
-},{"../templates/shouts/index.html":10,"../templates/shouts/new.html":11,"../templates/shouts/show.html":12,"backbone":2,"jquery":4}],9:[function(require,module,exports){
+},{"../templates/shouts/edit.html":10,"../templates/shouts/index.html":11,"../templates/shouts/show.html":12,"backbone":2,"jquery":4}],9:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
@@ -12417,7 +12407,7 @@ module.exports = Backbone.Router.extend({
     'faq': pages.faq,
 
     'shouts': shouts.index,
-    'shouts/new': shouts.new,
+    'shouts/new': shouts.edit,
     // 'shouts/create': shouts.create,
     'shouts/:id': shouts.show,
     'shouts/:id/edit': shouts.edit,
@@ -12429,6 +12419,28 @@ module.exports = Backbone.Router.extend({
 
 });
 },{"./controllers/home":6,"./controllers/pages":7,"./controllers/shouts":8,"backbone":2,"jquery":4}],10:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+=''+
+((__t=( shout ? 'Update' : 'Create' ))==null?'':__t)+
+'<form class="edit-shout-form" id="foo"><p>Name:<br><input type="text" name="name" value="'+
+((__t=( shout ? shout.get('name') : '' ))==null?'':__t)+
+'"></p><p>Shout:<br><input type="text" name="shout" value="'+
+((__t=( shout ? shout.get('shout') : '' ))==null?'':__t)+
+'"></p><p>';
+ if(shout) { 
+__p+='<input type="hidden" name="id" value="'+
+((__t=( shout.id ))==null?'':__t)+
+'">';
+ }; 
+__p+=' <button id="submit">Submit</button></p></form>';
+}
+return __p;
+};
+
+},{"underscore":5}],11:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -12454,16 +12466,6 @@ __p+='<p><b>'+
 ' likes</p>';
  }); 
 __p+='';
-}
-return __p;
-};
-
-},{"underscore":5}],11:[function(require,module,exports){
-var _ = require('underscore');
-module.exports = function(obj){
-var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-with(obj||{}){
-__p+='<form class="edit-shout-form" id="foo"><p>Name:<br><input type="text" name="name"></p><p>Shout:<br><input type="text" name="shout"></p><p><button id="submit">Submit</button></p></form>';
 }
 return __p;
 };

@@ -1,0 +1,18 @@
+
+<%= shout ? 'Update' : 'Create' %>
+<form class='edit-shout-form' id='foo'>
+  <p>
+    Name:<br>
+    <input type="text" name="name" value="<%= shout ? shout.get('name') : '' %>">
+  </p>
+  <p>
+    Shout:<br>
+    <input type="text" name="shout" value="<%= shout ? shout.get('shout') : '' %>">
+  </p>
+  <p>
+    <% if(shout) { %>
+      <input type="hidden" name="id" value="<%= shout.id %>">
+    <% }; %>
+    <button id='submit'>Submit</button>
+  </p>
+</form>

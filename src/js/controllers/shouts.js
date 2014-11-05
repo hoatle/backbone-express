@@ -4,10 +4,6 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
-// ???
-// var router = require('../router');
-// var router = new Router();
-
 // Need to put this in /src/js/lib
 $.fn.serializeObject = function() {
   var o = {};
@@ -54,23 +50,23 @@ var Index = Backbone.View.extend({
 var Edit = Backbone.View.extend({
   el: '#app',
   events: {'submit': 'save'},
-  initialize: function () {
-      this.render();
+  initialize: function (options) {
+      this.render(options);
   },
   render: function (options) {
     var that = this;
-    if(options.id){
+    if(options.id) {
       var shout = new Shout({id: options.id});
       shout.fetch({
         success: function (shout) {
-          var template = require('../templates/shouts/new.html');
+          var template = require('../templates/shouts/edit.html');
           that.$el.html(template({shout: shout}));
         }
       });
 
     }else{
-      var template = require('../templates/shouts/new.html');
-      this.$el.html(template());
+      var template = require('../templates/shouts/edit.html');
+      this.$el.html(template({shout: null}));
     }
   },
   save: function(e) {
@@ -78,9 +74,7 @@ var Edit = Backbone.View.extend({
     var data = $('#foo').serializeObject();
     var shout = new Shout();
     shout.save(data, {
-        success: function (shout) {
-            console.log(shout.toJSON());
-            console.dir(router);
+        success: function () {
             router.navigate('/shouts', {trigger: true});
         }
     });
@@ -102,12 +96,8 @@ exports.index = function() {
   new Index();
 };
 
-exports.new = function() {
-  new Edit();
-};
-
-exports.edit = function() {
-  new Edit();
+exports.edit = function(id) {
+  new Edit({id: id});
 };
 
 exports.show = function() {

@@ -15,7 +15,7 @@ module.exports = Backbone.Router.extend({
     'faq': pages.faq,
 
     'shouts': shouts.index,
-    'shouts/new': shouts.new,
+    'shouts/new': shouts.edit,
     // 'shouts/create': shouts.create,
     'shouts/:id': shouts.show,
     'shouts/:id/edit': shouts.edit,
