@@ -3,7 +3,6 @@
 var mongoose = require('mongoose');
 var Shout = mongoose.model('Shout');
 
-
 module.exports = function(app) {
 
   // index
@@ -33,32 +32,37 @@ module.exports = function(app) {
 
   // create
   app.post('/api/shouts', function(req, res) {
-
-    console.log('post in api shouts: ' + req.body);
-
     var shout = new Shout(req.body);
     shout.save(function(err) {
       if (err) {
         console.error(err);
       }
-      // res.json(shout, 201);
       res.status(201).json(shout);
     });
   });
 
-  // Question.update({ _id: req.params.id }, req.body, callback);
 
   // update
-  app.put('/api/shouts/:id', function(req) {
-    function callback (err) {
-      if(err){
+  app.put('/api/shouts/:id', function(req, res) {
+    Shout.findByIdAndUpdate(req.params.id,
+    { $set: req.body },  
+    function(err) {
+      if(err) {
         console.log(err);
       }
-    }
-    Shout.update({ _id: req.params.id }, req.body, callback);
-
+      res.json(200);
+    });
   });
+  
 
-
+  // delete
+  app.delete('/api/shouts/:id', function(req, res) {
+    Shout.remove({_id: req.params.id}).exec(function (err){
+      if(err) {
+        console.log(err);
+      }
+      res.json(200);
+    });
+  });
 
 };

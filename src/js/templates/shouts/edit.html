@@ -10,9 +10,11 @@
     <input type="text" name="shout" value="<%= shout ? shout.get('shout') : '' %>">
   </p>
   <p>
+    
+    <button class="btn btn-primary" id='submit'>Submit</button>
     <% if(shout) { %>
       <input type="hidden" name="id" value="<%= shout.id %>">
+      <button type="button" class="btn btn-danger delete">Delete</button>
     <% }; %>
-    <button id='submit'>Submit</button>
   </p>
 </form>

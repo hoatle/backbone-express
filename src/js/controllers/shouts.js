@@ -49,15 +49,18 @@ var Index = Backbone.View.extend({
 
 var Edit = Backbone.View.extend({
   el: '#app',
-  events: {'submit': 'save'},
+  events: {
+    'submit': 'save',
+    'click .delete': 'delete'
+  },
   initialize: function (options) {
       this.render(options);
   },
   render: function (options) {
     var that = this;
     if(options.id) {
-      var shout = new Shout({id: options.id});
-      shout.fetch({
+      that.shout = new Shout({id: options.id});
+      that.shout.fetch({
         success: function (shout) {
           var template = require('../templates/shouts/edit.html');
           that.$el.html(template({shout: shout}));
@@ -73,11 +76,22 @@ var Edit = Backbone.View.extend({
     e.preventDefault();
     var data = $('#foo').serializeObject();
     var shout = new Shout();
+    console.log('hahah');
     shout.save(data, {
         success: function () {
-            router.navigate('/shouts', {trigger: true});
+          console.log('damnnn');
+          router.navigate('/shouts', {trigger: true});
         }
     });
+  },
+  delete: function(e) {
+    console.log('delete');
+    this.shout.destroy({
+      success: function () {
+        router.navigate('/shouts', {trigger: true});
+      }
+    });
+    return false;
   }
 });
 

@@ -12331,15 +12331,18 @@ var Index = Backbone.View.extend({
 
 var Edit = Backbone.View.extend({
   el: '#app',
-  events: {'submit': 'save'},
+  events: {
+    'submit': 'save',
+    'click .delete': 'delete'
+  },
   initialize: function (options) {
       this.render(options);
   },
   render: function (options) {
     var that = this;
     if(options.id) {
-      var shout = new Shout({id: options.id});
-      shout.fetch({
+      that.shout = new Shout({id: options.id});
+      that.shout.fetch({
         success: function (shout) {
           var template = require('../templates/shouts/edit.html');
           that.$el.html(template({shout: shout}));
@@ -12355,11 +12358,22 @@ var Edit = Backbone.View.extend({
     e.preventDefault();
     var data = $('#foo').serializeObject();
     var shout = new Shout();
+    console.log('hahah');
     shout.save(data, {
         success: function () {
-            router.navigate('/shouts', {trigger: true});
+          console.log('damnnn');
+          router.navigate('/shouts', {trigger: true});
         }
     });
+  },
+  delete: function(e) {
+    console.log('delete');
+    this.shout.destroy({
+      success: function () {
+        router.navigate('/shouts', {trigger: true});
+      }
+    });
+    return false;
   }
 });
 
@@ -12429,13 +12443,13 @@ __p+=''+
 ((__t=( shout ? shout.get('name') : '' ))==null?'':__t)+
 '"></p><p>Shout:<br><input type="text" name="shout" value="'+
 ((__t=( shout ? shout.get('shout') : '' ))==null?'':__t)+
-'"></p><p>';
+'"></p><p><button class="btn btn-primary" id="submit">Submit</button>';
  if(shout) { 
-__p+='<input type="hidden" name="id" value="'+
+__p+=' <input type="hidden" name="id" value="'+
 ((__t=( shout.id ))==null?'':__t)+
-'">';
+'"> <button type="button" class="btn btn-danger delete">Delete</button>';
  }; 
-__p+=' <button id="submit">Submit</button></p></form>';
+__p+='</p></form>';
 }
 return __p;
 };
