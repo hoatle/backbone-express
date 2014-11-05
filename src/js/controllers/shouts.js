@@ -5,7 +5,7 @@ var Backbone = require('backbone');
 Backbone.$ = $;
 
 // ???
-var router = require('../router');
+// var router = require('../router');
 // var router = new Router();
 
 // Need to put this in /src/js/lib
@@ -33,7 +33,7 @@ var Shout = Backbone.Model.extend({
   urlRoot: '/api/shouts'
 });
 
-var ShoutIndexView = Backbone.View.extend({
+var Index = Backbone.View.extend({
     el: '#app',
     initialize: function () {
         this.render();
@@ -51,15 +51,27 @@ var ShoutIndexView = Backbone.View.extend({
     }
 });
 
-var ShoutEditView = Backbone.View.extend({
+var Edit = Backbone.View.extend({
   el: '#app',
   events: {'submit': 'save'},
   initialize: function () {
       this.render();
   },
-  render: function () {
-    var template = require('../templates/shouts/new.html');
-    this.$el.html(template());
+  render: function (options) {
+    var that = this;
+    if(options.id){
+      var shout = new Shout({id: options.id});
+      shout.fetch({
+        success: function (shout) {
+          var template = require('../templates/shouts/new.html');
+          that.$el.html(template({shout: shout}));
+        }
+      });
+
+    }else{
+      var template = require('../templates/shouts/new.html');
+      this.$el.html(template());
+    }
   },
   save: function(e) {
     e.preventDefault();
@@ -69,35 +81,38 @@ var ShoutEditView = Backbone.View.extend({
         success: function (shout) {
             console.log(shout.toJSON());
             console.dir(router);
-            // not sure how to bring router constructor in with Browserify
             router.navigate('/shouts', {trigger: true});
         }
     });
   }
 });
 
-// var ShoutShowView = Backbone.View.extend({
-//   el: '#app',
-//   initialize: function () {
-//       this.render();
-//   },
-//   render: function () {
-//     var template = require('../templates/shouts/new.html');
-//     this.$el.html(template());
-//   }
-// });
+var Show = Backbone.View.extend({
+  el: '#app',
+  initialize: function () {
+      this.render();
+  },
+  render: function () {
+    var template = require('../templates/shouts/show.html');
+    this.$el.html(template());
+  }
+});
 
 exports.index = function() {
-  var shoutIndexView = new ShoutIndexView();
+  new Index();
 };
 
 exports.new = function() {
-  var shoutEditView = new ShoutEditView();
+  new Edit();
 };
 
-// exports.show = function() {
-//   var shoutShowView = new ShoutShowView();
-// };
+exports.edit = function() {
+  new Edit();
+};
+
+exports.show = function() {
+  new Show();
+};
 
 
 

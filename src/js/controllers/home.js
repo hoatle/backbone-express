@@ -5,7 +5,7 @@ var Backbone = require('backbone');
 Backbone.$ = $;
 
 
-exports.home = Backbone.View.extend({
+var Home = Backbone.View.extend({
 
     el: '#app',
 
@@ -14,13 +14,11 @@ exports.home = Backbone.View.extend({
     },
 
     render: function () {
-      $('#app').html('Welcome home.');
+      $('#app').html('Welcome home Man.');
     }
 });
 
 
-exports.home2 = function() {
-  $('#app').html('we in the home 2 controller.');
+module.exports = function() {
+  new Home();
 };
-
-

@@ -4,35 +4,25 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
-// Templates
-var faqTemplate = require('./templates/static/faq.html');
+var home = require('./controllers/home');
+var shouts = require('./controllers/shouts');
+var pages = require('./controllers/pages');
 
-// Controllers
-var homeController = require('./controllers/home');
-var shoutsController = require('./controllers/shouts');
-
-var Router = Backbone.Router.extend({
+module.exports = Backbone.Router.extend({
 
   routes: {
-    '': new homeController.home(),
-    'home2': homeController.home2,
-    'faq': 'faq',
+    '': home,
+    'faq': pages.faq,
 
-    'shouts': shoutsController.index,
-    'shouts/new': shoutsController.new,
-    // 'shouts/create': shoutsController.create,
-    'shouts/:id': shoutsController.show,
-    'shouts/:id/edit': shoutsController.edit,
-    // 'shouts/:id/update': shoutsController.update,
-    // 'shouts/:id/delete': shoutsController.destroy,
-    // 'shouts/:id/like': shoutsController.like, 
+    'shouts': shouts.index,
+    'shouts/new': shouts.new,
+    // 'shouts/create': shouts.create,
+    'shouts/:id': shouts.show,
+    'shouts/:id/edit': shouts.edit,
+    // 'shouts/:id/update': shouts.update,
+    // 'shouts/:id/delete': shouts.destroy,
+    // 'shouts/:id/like': shouts.like, 
 
-  },
-
-  faq: function () {
-    $('#app').html(faqTemplate({foo: 'bar'}));
   }
 
 });
-
-module.exports = new Router();
