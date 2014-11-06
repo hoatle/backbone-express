@@ -12313,19 +12313,37 @@ var Shout = Backbone.Model.extend({
 
 var Index = Backbone.View.extend({
     el: '#app',
+    events: {
+      'click .like': 'like',
+      'click .show-reply': 'toggleReply'
+    },
     initialize: function () {
+
         this.render();
+
     },
     render: function () {
       var that = this;
       var shouts = new Shouts();
+
       shouts.fetch({
         success: function (shouts) {
           var template = require('../templates/shouts/index.html');
           that.$el.html(template({ shouts: shouts.models }));
-          console.log(shouts.models);
+          $('.shout-reply').hide();
         }
       });
+    },
+    like: function (e) {
+      var id = $(e.currentTarget).data('like');
+      window.alert('we made it here:' + id);
+      return false;
+    },
+    toggleReply: function (e) {
+      var id = $(e.currentTarget).data('reply-link');
+      // window.alert('we made it here:' + id);
+      $('[data-reply-form="' + id + '"]').toggle();
+      return false;
     }
 });
 
@@ -12358,16 +12376,13 @@ var Edit = Backbone.View.extend({
     e.preventDefault();
     var data = $('#foo').serializeObject();
     var shout = new Shout();
-    console.log('hahah');
     shout.save(data, {
         success: function () {
-          console.log('damnnn');
           router.navigate('/shouts', {trigger: true});
         }
     });
   },
-  delete: function(e) {
-    console.log('delete');
+  delete: function() {
     this.shout.destroy({
       success: function () {
         router.navigate('/shouts', {trigger: true});
@@ -12379,12 +12394,19 @@ var Edit = Backbone.View.extend({
 
 var Show = Backbone.View.extend({
   el: '#app',
-  initialize: function () {
-      this.render();
+  initialize: function (options) {
+      this.render(options);
   },
-  render: function () {
-    var template = require('../templates/shouts/show.html');
-    this.$el.html(template());
+  render: function (options) {
+    var that = this;
+    var shout = new Shout({id: options.id});
+    shout.fetch({
+      success: function (data) {
+        var template = require('../templates/shouts/show.html');
+        that.$el.html(template({shout: data}));
+      }
+    });
+
   }
 });
 
@@ -12396,8 +12418,8 @@ exports.edit = function(id) {
   new Edit({id: id});
 };
 
-exports.show = function() {
-  new Show();
+exports.show = function(id) {
+  new Show({id: id});
 };
 
 
@@ -12461,23 +12483,23 @@ var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments
 with(obj||{}){
 __p+='<h1>Shouts</h1><a href="#/shouts/new">New</a><hr>';
  _.each(shouts, function (shout) { 
-__p+='<p><b>'+
+__p+='<div class="shout"><div class="shout-body"><b>'+
 ((__t=( shout.get('name') ))==null?'':__t)+
 ':</b>'+
 ((__t=( shout.get('shout') ))==null?'':__t)+
-'<br><a href="#shouts/'+
+'</div><div class="shout-footer"><a href="#shouts/'+
 ((__t=( shout.get('_id') ))==null?'':__t)+
 '">View</a> | <a href="#shouts/'+
 ((__t=( shout.get('_id') ))==null?'':__t)+
-'/edit">Edit</a> | <a href="#shouts/'+
+'/edit">Edit</a> | <a href="reply" class="show-reply" data-reply-link="'+
 ((__t=( shout.get('_id') ))==null?'':__t)+
-'/delete">Delete</a> | <a href="#shouts/'+
+'">Reply</a> | <a href="like" class="like" data-like="'+
 ((__t=( shout.get('_id') ))==null?'':__t)+
-'/reply">Reply</a> | <a href="#shouts/'+
-((__t=( shout.get('_id') ))==null?'':__t)+
-'/like">Like</a> |'+
+'">Like</a> ('+
 ((__t=( shout.get('numLikes') ))==null?'':__t)+
-' likes</p>';
+' likes)</div><div class="shout-reply" data-reply-form="'+
+((__t=( shout.get('_id') ))==null?'':__t)+
+'"><form class="shout-reply-form"><textarea name="shout" cols="75" rows="3"></textarea><br><button class="btn btn-primary" id="submit">Submit</button></form></div></div><hr>';
  }); 
 __p+='';
 }

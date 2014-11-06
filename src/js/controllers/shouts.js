@@ -31,19 +31,37 @@ var Shout = Backbone.Model.extend({
 
 var Index = Backbone.View.extend({
     el: '#app',
+    events: {
+      'click .like': 'like',
+      'click .show-reply': 'toggleReply'
+    },
     initialize: function () {
+
         this.render();
+
     },
     render: function () {
       var that = this;
       var shouts = new Shouts();
+
       shouts.fetch({
         success: function (shouts) {
           var template = require('../templates/shouts/index.html');
           that.$el.html(template({ shouts: shouts.models }));
-          console.log(shouts.models);
+          $('.shout-reply').hide();
         }
       });
+    },
+    like: function (e) {
+      var id = $(e.currentTarget).data('like');
+      window.alert('we made it here:' + id);
+      return false;
+    },
+    toggleReply: function (e) {
+      var id = $(e.currentTarget).data('reply-link');
+      // window.alert('we made it here:' + id);
+      $('[data-reply-form="' + id + '"]').toggle();
+      return false;
     }
 });
 
@@ -76,16 +94,13 @@ var Edit = Backbone.View.extend({
     e.preventDefault();
     var data = $('#foo').serializeObject();
     var shout = new Shout();
-    console.log('hahah');
     shout.save(data, {
         success: function () {
-          console.log('damnnn');
           router.navigate('/shouts', {trigger: true});
         }
     });
   },
-  delete: function(e) {
-    console.log('delete');
+  delete: function() {
     this.shout.destroy({
       success: function () {
         router.navigate('/shouts', {trigger: true});
@@ -97,12 +112,19 @@ var Edit = Backbone.View.extend({
 
 var Show = Backbone.View.extend({
   el: '#app',
-  initialize: function () {
-      this.render();
+  initialize: function (options) {
+      this.render(options);
   },
-  render: function () {
-    var template = require('../templates/shouts/show.html');
-    this.$el.html(template());
+  render: function (options) {
+    var that = this;
+    var shout = new Shout({id: options.id});
+    shout.fetch({
+      success: function (data) {
+        var template = require('../templates/shouts/show.html');
+        that.$el.html(template({shout: data}));
+      }
+    });
+
   }
 });
 
@@ -114,8 +136,8 @@ exports.edit = function(id) {
   new Edit({id: id});
 };
 
-exports.show = function() {
-  new Show();
+exports.show = function(id) {
+  new Show({id: id});
 };
 
 

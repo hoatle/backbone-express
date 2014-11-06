@@ -2,15 +2,24 @@
 <a href='#/shouts/new'>New</a>
 <hr>
 <% _.each(shouts, function (shout) { %>
-  <p>
-    <b><%= shout.get('name') %>:</b><%= shout.get('shout') %>
-    <br>
-    <a href="#shouts/<%= shout.get('_id') %>">View</a> |
-    <a href="#shouts/<%= shout.get('_id') %>/edit">Edit</a> |
-    <a href="#shouts/<%= shout.get('_id') %>/delete">Delete</a> |
-    <a href="#shouts/<%= shout.get('_id') %>/reply">Reply</a> |
-    <a href="#shouts/<%= shout.get('_id') %>/like">Like</a> |
-    <%= shout.get('numLikes') %> likes
-
-  </p>
+    <div class="shout">
+        <div class="shout-body">
+            <b><%= shout.get('name') %>:</b><%= shout.get('shout') %>
+        </div>
+        <div class="shout-footer">
+            <a href="#shouts/<%= shout.get('_id') %>">View</a> |
+            <a href="#shouts/<%= shout.get('_id') %>/edit">Edit</a> |
+            <a href="reply" class="show-reply" data-reply-link="<%= shout.get('_id') %>">Reply</a> |
+            <a href="like" class="like" data-like="<%= shout.get('_id') %>">Like</a>
+            (<%= shout.get('numLikes') %> likes)
+        </div>
+        <div class="shout-reply" data-reply-form="<%= shout.get('_id') %>">
+            <form class="shout-reply-form">
+                <textarea name="shout" cols="75" rows="3"></textarea>
+                <br>
+                <button class="btn btn-primary" id='submit'>Submit</button>
+            </form>
+        </div>
+    </div>
+    <hr>
 <% }); %>
