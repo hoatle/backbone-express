@@ -4,24 +4,26 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
-var home = require('./controllers/home');
-var shouts = require('./controllers/shouts');
-var pages = require('./controllers/pages');
+// views
+var home = require('./views/home');
+var shouts = require('./views/shouts');
+var pages = require('./views/pages');
+
 
 module.exports = Backbone.Router.extend({
 
   routes: {
     '': home,
+    
     'faq': pages.faq,
 
     'shouts': shouts.index,
     'shouts/new': shouts.edit,
-    // 'shouts/create': shouts.create,
     'shouts/:id': shouts.show,
     'shouts/:id/edit': shouts.edit,
-    // 'shouts/:id/update': shouts.update,
-    // 'shouts/:id/delete': shouts.destroy,
-    // 'shouts/:id/like': shouts.like, 
+    
+    'login': require('./views/login'),
+    'join': require('./views/join'),
 
   }
 

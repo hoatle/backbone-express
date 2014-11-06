@@ -3,31 +3,10 @@
 var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
+require('../lib/serialize-object.js')();
 
-// Need to put this in /src/js/lib
-$.fn.serializeObject = function() {
-  var o = {};
-  var a = this.serializeArray();
-  $.each(a, function() {
-      if (o[this.name] !== undefined) {
-          if (!o[this.name].push) {
-              o[this.name] = [o[this.name]];
-          }
-          o[this.name].push(this.value || '');
-      } else {
-          o[this.name] = this.value || '';
-      }
-  });
-  return o;
-};
+var models = require('../models/shout.js');
 
-var Shouts = Backbone.Collection.extend({
-  url: '/api/shouts'
-});
-
-var Shout = Backbone.Model.extend({
-  urlRoot: '/api/shouts'
-});
 
 var Index = Backbone.View.extend({
     el: '#app',
@@ -42,7 +21,7 @@ var Index = Backbone.View.extend({
     },
     render: function () {
       var that = this;
-      var shouts = new Shouts();
+      var shouts = new models.Shouts();
 
       shouts.fetch({
         success: function (shouts) {
@@ -59,7 +38,6 @@ var Index = Backbone.View.extend({
     },
     toggleReply: function (e) {
       var id = $(e.currentTarget).data('reply-link');
-      // window.alert('we made it here:' + id);
       $('[data-reply-form="' + id + '"]').toggle();
       return false;
     }
@@ -77,7 +55,7 @@ var Edit = Backbone.View.extend({
   render: function (options) {
     var that = this;
     if(options.id) {
-      that.shout = new Shout({id: options.id});
+      that.shout = new models.Shout({id: options.id});
       that.shout.fetch({
         success: function (shout) {
           var template = require('../templates/shouts/edit.html');
@@ -93,17 +71,17 @@ var Edit = Backbone.View.extend({
   save: function(e) {
     e.preventDefault();
     var data = $('#foo').serializeObject();
-    var shout = new Shout();
+    var shout = new models.Shout();
     shout.save(data, {
         success: function () {
-          router.navigate('/shouts', {trigger: true});
+          window.router.navigate('/shouts', {trigger: true});
         }
     });
   },
   delete: function() {
     this.shout.destroy({
       success: function () {
-        router.navigate('/shouts', {trigger: true});
+        window.router.navigate('/shouts', {trigger: true});
       }
     });
     return false;
@@ -117,7 +95,7 @@ var Show = Backbone.View.extend({
   },
   render: function (options) {
     var that = this;
-    var shout = new Shout({id: options.id});
+    var shout = new models.Shout({id: options.id});
     shout.fetch({
       success: function (data) {
         var template = require('../templates/shouts/show.html');

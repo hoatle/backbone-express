@@ -1,21 +1,22 @@
 'use strict';
 
+var $ = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = $;
+
 var Shout = Backbone.Model.extend({
-
-  urlRoot: '/shouts',
-
-  idAttribute: '_id',
-
+  urlRoot: '/api/shouts',
   defaults: {
     name: 'Anon',
     msg: 'No msg'
   }
 });
 
-var ShoutCollection = Backbone.Collection.extend({
-
-    model: Shout,
-
-    url: '/shouts'
-
+var Shouts = Backbone.Collection.extend({
+  url: '/api/shouts'
 });
+
+module.exports = {
+    Shout: Shout,
+    Shouts: Shouts
+};

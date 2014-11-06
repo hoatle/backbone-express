@@ -12245,216 +12245,130 @@ module.exports=require(3)
 'use strict';
 
 var $ = require('jquery');
+
+module.exports = function () {
+
+  $.fn.serializeObject = function() {
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+  };
+
+};
+},{"jquery":4}],7:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
-
-var Home = Backbone.View.extend({
-
-    el: '#app',
-
-    initialize: function () {
-        this.render();
-    },
-
-    render: function () {
-      $('#app').html('Welcome home Man.');
-    }
+var Shout = Backbone.Model.extend({
+  urlRoot: '/api/shouts',
+  defaults: {
+    name: 'Anon',
+    msg: 'No msg'
+  }
 });
-
-
-module.exports = function() {
-  new Home();
-};
-
-},{"backbone":2,"jquery":4}],7:[function(require,module,exports){
-'use strict';
-
-var $ = require('jquery');
-var Backbone = require('backbone');
-Backbone.$ = $;
-
-exports.faq = function() {
-  var template = require('../templates/static/faq.html');
-  $('#app').html(template({foo: 'bar'}));
-};
-
-},{"../templates/static/faq.html":13,"backbone":2,"jquery":4}],8:[function(require,module,exports){
-'use strict';
-
-var $ = require('jquery');
-var Backbone = require('backbone');
-Backbone.$ = $;
-
-// Need to put this in /src/js/lib
-$.fn.serializeObject = function() {
-  var o = {};
-  var a = this.serializeArray();
-  $.each(a, function() {
-      if (o[this.name] !== undefined) {
-          if (!o[this.name].push) {
-              o[this.name] = [o[this.name]];
-          }
-          o[this.name].push(this.value || '');
-      } else {
-          o[this.name] = this.value || '';
-      }
-  });
-  return o;
-};
 
 var Shouts = Backbone.Collection.extend({
   url: '/api/shouts'
 });
 
-var Shout = Backbone.Model.extend({
-  urlRoot: '/api/shouts'
-});
-
-var Index = Backbone.View.extend({
-    el: '#app',
-    events: {
-      'click .like': 'like',
-      'click .show-reply': 'toggleReply'
-    },
-    initialize: function () {
-
-        this.render();
-
-    },
-    render: function () {
-      var that = this;
-      var shouts = new Shouts();
-
-      shouts.fetch({
-        success: function (shouts) {
-          var template = require('../templates/shouts/index.html');
-          that.$el.html(template({ shouts: shouts.models }));
-          $('.shout-reply').hide();
-        }
-      });
-    },
-    like: function (e) {
-      var id = $(e.currentTarget).data('like');
-      window.alert('we made it here:' + id);
-      return false;
-    },
-    toggleReply: function (e) {
-      var id = $(e.currentTarget).data('reply-link');
-      // window.alert('we made it here:' + id);
-      $('[data-reply-form="' + id + '"]').toggle();
-      return false;
-    }
-});
-
-var Edit = Backbone.View.extend({
-  el: '#app',
-  events: {
-    'submit': 'save',
-    'click .delete': 'delete'
-  },
-  initialize: function (options) {
-      this.render(options);
-  },
-  render: function (options) {
-    var that = this;
-    if(options.id) {
-      that.shout = new Shout({id: options.id});
-      that.shout.fetch({
-        success: function (shout) {
-          var template = require('../templates/shouts/edit.html');
-          that.$el.html(template({shout: shout}));
-        }
-      });
-
-    }else{
-      var template = require('../templates/shouts/edit.html');
-      this.$el.html(template({shout: null}));
-    }
-  },
-  save: function(e) {
-    e.preventDefault();
-    var data = $('#foo').serializeObject();
-    var shout = new Shout();
-    shout.save(data, {
-        success: function () {
-          router.navigate('/shouts', {trigger: true});
-        }
-    });
-  },
-  delete: function() {
-    this.shout.destroy({
-      success: function () {
-        router.navigate('/shouts', {trigger: true});
-      }
-    });
-    return false;
-  }
-});
-
-var Show = Backbone.View.extend({
-  el: '#app',
-  initialize: function (options) {
-      this.render(options);
-  },
-  render: function (options) {
-    var that = this;
-    var shout = new Shout({id: options.id});
-    shout.fetch({
-      success: function (data) {
-        var template = require('../templates/shouts/show.html');
-        that.$el.html(template({shout: data}));
-      }
-    });
-
-  }
-});
-
-exports.index = function() {
-  new Index();
+module.exports = {
+    Shout: Shout,
+    Shouts: Shouts
 };
-
-exports.edit = function(id) {
-  new Edit({id: id});
-};
-
-exports.show = function(id) {
-  new Show({id: id});
-};
-
-
-
-
-},{"../templates/shouts/edit.html":10,"../templates/shouts/index.html":11,"../templates/shouts/show.html":12,"backbone":2,"jquery":4}],9:[function(require,module,exports){
+},{"backbone":2,"jquery":4}],8:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
-var home = require('./controllers/home');
-var shouts = require('./controllers/shouts');
-var pages = require('./controllers/pages');
+var User = Backbone.Model.extend({
+  urlRoot: '/api/users'
+});
+
+var Users = Backbone.Collection.extend({
+  url: '/api/users'
+});
+
+module.exports = {
+    User: User,
+    Users: Users
+};
+},{"backbone":2,"jquery":4}],9:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = $;
+
+// views
+var home = require('./views/home');
+var shouts = require('./views/shouts');
+var pages = require('./views/pages');
+
 
 module.exports = Backbone.Router.extend({
 
   routes: {
     '': home,
+    
     'faq': pages.faq,
 
     'shouts': shouts.index,
     'shouts/new': shouts.edit,
-    // 'shouts/create': shouts.create,
     'shouts/:id': shouts.show,
     'shouts/:id/edit': shouts.edit,
-    // 'shouts/:id/update': shouts.update,
-    // 'shouts/:id/delete': shouts.destroy,
-    // 'shouts/:id/like': shouts.like, 
+    
+    'login': require('./views/login'),
+    'join': require('./views/join'),
 
   }
 
 });
-},{"./controllers/home":6,"./controllers/pages":7,"./controllers/shouts":8,"backbone":2,"jquery":4}],10:[function(require,module,exports){
+},{"./views/home":16,"./views/join":17,"./views/login":18,"./views/pages":19,"./views/shouts":20,"backbone":2,"jquery":4}],10:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='<form><p>Email:<br><input type="text" name="email"></p><p>Full Name:<br><input type="text" name="fullName"></p><p>Username:<br><input type="text" name="username"></p><p>Password:<br><input type="text" name="password"></p><p><input type="submit" name="Sign up"></p></form><a href="#login">Login</a>';
+}
+return __p;
+};
+
+},{"underscore":5}],11:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='<form><p>Email:<br><input type="text" name="email"></p><p>Password:<br><input type="text" name="email"></p><p><input type="submit" name="Sign in"></p></form><a href="#join">Join</a>';
+}
+return __p;
+};
+
+},{"underscore":5}],12:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='<h1>This is the FAQ page</h1><p>Here you can find answers to many questions.</p><h2>What color s they sky?</h2><p>Green.</p><h2>Are you sure?</h2><p>What?</p>';
+}
+return __p;
+};
+
+},{"underscore":5}],13:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -12476,7 +12390,7 @@ __p+='</p></form>';
 return __p;
 };
 
-},{"underscore":5}],11:[function(require,module,exports){
+},{"underscore":5}],14:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -12506,7 +12420,7 @@ __p+='';
 return __p;
 };
 
-},{"underscore":5}],12:[function(require,module,exports){
+},{"underscore":5}],15:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -12522,14 +12436,226 @@ __p+='<h1>Shout</h1><ul><li>'+
 return __p;
 };
 
-},{"underscore":5}],13:[function(require,module,exports){
-var _ = require('underscore');
-module.exports = function(obj){
-var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-with(obj||{}){
-__p+='<h1>This is the FAQ page</h1><p>Here you can find answers to many questions.</p><h2>What color s they sky?</h2><p>Green.</p><h2>Are you sure?</h2><p>What?</p>';
-}
-return __p;
+},{"underscore":5}],16:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = $;
+
+
+var Home = Backbone.View.extend({
+
+    el: '#app',
+
+    initialize: function () {
+        this.render();
+    },
+
+    render: function () {
+      $('#app').html('Welcome home Man.');
+    }
+});
+
+
+module.exports = function() {
+  new Home();
 };
 
-},{"underscore":5}]},{},[1]);
+},{"backbone":2,"jquery":4}],17:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = $;
+
+var template = require('../templates/auth/join.html');
+var models = require('../models/user.js');
+
+var Join = Backbone.View.extend({
+    el: '#app',
+    events: {
+      'submit': 'save'
+    },
+    initialize: function () {
+        this.render();
+    },
+    render: function () {
+      this.$el.html(template());
+    },
+    save: function() {
+      var data = $('#foo').serializeObject();
+      var user = new models.User();
+      user.save(data, {
+          success: function () {
+            window.router.navigate('', {trigger: true});
+          }
+      });
+      return false;
+    }
+});
+
+module.exports = function() {
+  new Join();
+};
+
+},{"../models/user.js":8,"../templates/auth/join.html":10,"backbone":2,"jquery":4}],18:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = $;
+
+var template = require('../templates/auth/login.html');
+
+var Login = Backbone.View.extend({
+    el: '#app',
+    initialize: function () {
+        this.render();
+    },
+    render: function () {
+      this.$el.html(template());
+    }
+});
+
+module.exports = function() {
+  new Login();
+};
+
+},{"../templates/auth/login.html":11,"backbone":2,"jquery":4}],19:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = $;
+
+exports.faq = function() {
+  var template = require('../templates/pages/faq.html');
+  $('#app').html(template({foo: 'bar'}));
+};
+
+},{"../templates/pages/faq.html":12,"backbone":2,"jquery":4}],20:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = $;
+require('../lib/serialize-object.js')();
+
+var models = require('../models/shout.js');
+
+
+var Index = Backbone.View.extend({
+    el: '#app',
+    events: {
+      'click .like': 'like',
+      'click .show-reply': 'toggleReply'
+    },
+    initialize: function () {
+
+        this.render();
+
+    },
+    render: function () {
+      var that = this;
+      var shouts = new models.Shouts();
+
+      shouts.fetch({
+        success: function (shouts) {
+          var template = require('../templates/shouts/index.html');
+          that.$el.html(template({ shouts: shouts.models }));
+          $('.shout-reply').hide();
+        }
+      });
+    },
+    like: function (e) {
+      var id = $(e.currentTarget).data('like');
+      window.alert('we made it here:' + id);
+      return false;
+    },
+    toggleReply: function (e) {
+      var id = $(e.currentTarget).data('reply-link');
+      $('[data-reply-form="' + id + '"]').toggle();
+      return false;
+    }
+});
+
+var Edit = Backbone.View.extend({
+  el: '#app',
+  events: {
+    'submit': 'save',
+    'click .delete': 'delete'
+  },
+  initialize: function (options) {
+      this.render(options);
+  },
+  render: function (options) {
+    var that = this;
+    if(options.id) {
+      that.shout = new models.Shout({id: options.id});
+      that.shout.fetch({
+        success: function (shout) {
+          var template = require('../templates/shouts/edit.html');
+          that.$el.html(template({shout: shout}));
+        }
+      });
+
+    }else{
+      var template = require('../templates/shouts/edit.html');
+      this.$el.html(template({shout: null}));
+    }
+  },
+  save: function(e) {
+    e.preventDefault();
+    var data = $('#foo').serializeObject();
+    var shout = new models.Shout();
+    shout.save(data, {
+        success: function () {
+          window.router.navigate('/shouts', {trigger: true});
+        }
+    });
+  },
+  delete: function() {
+    this.shout.destroy({
+      success: function () {
+        window.router.navigate('/shouts', {trigger: true});
+      }
+    });
+    return false;
+  }
+});
+
+var Show = Backbone.View.extend({
+  el: '#app',
+  initialize: function (options) {
+      this.render(options);
+  },
+  render: function (options) {
+    var that = this;
+    var shout = new models.Shout({id: options.id});
+    shout.fetch({
+      success: function (data) {
+        var template = require('../templates/shouts/show.html');
+        that.$el.html(template({shout: data}));
+      }
+    });
+
+  }
+});
+
+exports.index = function() {
+  new Index();
+};
+
+exports.edit = function(id) {
+  new Edit({id: id});
+};
+
+exports.show = function(id) {
+  new Show({id: id});
+};
+
+
+
+
+},{"../lib/serialize-object.js":6,"../models/shout.js":7,"../templates/shouts/edit.html":13,"../templates/shouts/index.html":14,"../templates/shouts/show.html":15,"backbone":2,"jquery":4}]},{},[1]);
