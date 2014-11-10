@@ -22,7 +22,9 @@ module.exports = function(app) {
        console.log(user);
        req.login(user, function(err) {
            if (err) return next(err);
-           res.cookie('user', user, {maxAge: 900000});
+           // i don't think i need the code below
+           // i think passport automatically sets a cookie
+           // res.cookie('user', user, {maxAge: 900000});
            return res.json({
                message: 'user authenticated',
            });
