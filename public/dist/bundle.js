@@ -12377,7 +12377,7 @@ var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<form method="POST" action="/login"><p>Email:<br><input type="text" name="email"></p><p>Password:<br><input type="text" name="password"></p><p><input type="submit" name="Sign in"></p></form><a href="#join">Join</a>';
+__p+='<form method="POST" action="/api/auth/login"><p>Email:<br><input type="text" name="email"></p><p>Password:<br><input type="text" name="password"></p><p><input type="submit" name="Sign in"></p></form><hr><a href="#join">Join</a><hr><a href="/auth/facebook" class="btn btn-facebook"><i class="fa fa-facebook">Facebook</i></a><br><a href="/auth/google" class="btn btn-google"><i class="fa fa-google-plus">Google+</i></a>';
 }
 return __p;
 };
