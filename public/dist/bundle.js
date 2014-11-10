@@ -12357,7 +12357,7 @@ var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<h1>Welcome to the site!</h1><ul><li><a href="#users">Users</a></li></ul>';
+__p+='<h1>Welcome to the site!</h1><hr><a href="/api/auth/user">Check auth</a><hr><ul><li><a href="#users">Users</a></li></ul>';
 }
 return __p;
 };
