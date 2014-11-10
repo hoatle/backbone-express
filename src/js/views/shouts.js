@@ -3,10 +3,9 @@
 var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
-require('../lib/serialize-object.js')();
 
 var models = require('../models/shout.js');
-
+require('../lib/serialize-object.js')();
 
 var Index = Backbone.View.extend({
     el: '#app',
@@ -31,13 +30,13 @@ var Index = Backbone.View.extend({
         }
       });
     },
-    like: function (e) {
-      var id = $(e.currentTarget).data('like');
+    like: function (ev) {
+      var id = $(ev.currentTarget).data('like');
       window.alert('we made it here:' + id);
       return false;
     },
-    toggleReply: function (e) {
-      var id = $(e.currentTarget).data('reply-link');
+    toggleReply: function (ev) {
+      var id = $(ev.currentTarget).data('reply-link');
       $('[data-reply-form="' + id + '"]').toggle();
       return false;
     }
@@ -68,8 +67,8 @@ var Edit = Backbone.View.extend({
       this.$el.html(template({shout: null}));
     }
   },
-  save: function(e) {
-    e.preventDefault();
+  save: function(ev) {
+    ev.preventDefault();
     var data = $('#foo').serializeObject();
     var shout = new models.Shout();
     shout.save(data, {

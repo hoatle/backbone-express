@@ -13,6 +13,7 @@ module.exports = function(app) {
       if(err) {
         console.log(err);
       }
+      res.cookie('train', 'test', {maxAge: 900000});
       res.json(shouts);
     });
 
@@ -20,6 +21,7 @@ module.exports = function(app) {
 
   // show
   app.get('/api/shouts/:id', function(req, res) {
+    console.log(req.session.foo);
     Shout
     .findById(req.params.id, function (err, shout) {
       if(err) {

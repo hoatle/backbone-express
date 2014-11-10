@@ -12335,30 +12335,14 @@ module.exports = Backbone.Router.extend({
     'login': require('./views/login'),
     'join': require('./views/join'),
 
+    'users': require('./views/users-index'),
+    'users/:id': require('./views/profile'),
+
+
   }
 
 });
-},{"./views/home":16,"./views/join":17,"./views/login":18,"./views/pages":19,"./views/shouts":20,"backbone":2,"jquery":4}],10:[function(require,module,exports){
-var _ = require('underscore');
-module.exports = function(obj){
-var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-with(obj||{}){
-__p+='<form><p>Email:<br><input type="text" name="email"></p><p>Full Name:<br><input type="text" name="fullName"></p><p>Username:<br><input type="text" name="username"></p><p>Password:<br><input type="text" name="password"></p><p><input type="submit" name="Sign up"></p></form><a href="#login">Login</a>';
-}
-return __p;
-};
-
-},{"underscore":5}],11:[function(require,module,exports){
-var _ = require('underscore');
-module.exports = function(obj){
-var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-with(obj||{}){
-__p+='<form><p>Email:<br><input type="text" name="email"></p><p>Password:<br><input type="text" name="email"></p><p><input type="submit" name="Sign in"></p></form><a href="#join">Join</a>';
-}
-return __p;
-};
-
-},{"underscore":5}],12:[function(require,module,exports){
+},{"./views/home":19,"./views/join":20,"./views/login":21,"./views/pages":22,"./views/profile":23,"./views/shouts":24,"./views/users-index":25,"backbone":2,"jquery":4}],10:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -12368,7 +12352,53 @@ __p+='<h1>This is the FAQ page</h1><p>Here you can find answers to many question
 return __p;
 };
 
+},{"underscore":5}],11:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='<h1>Welcome to the site!</h1><ul><li><a href="#users">Users</a></li></ul>';
+}
+return __p;
+};
+
+},{"underscore":5}],12:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='<div id="msg"></div><br><form id="join-form"><p>Email:<br><input type="text" name="email"></p><p>Full Name:<br><input type="text" name="fullName"></p><p>Username:<br><input type="text" name="username"></p><p>Password:<br><input type="text" name="password"></p><p><input type="submit" name="Sign up"></p></form><a href="#login">Login</a>';
+}
+return __p;
+};
+
 },{"underscore":5}],13:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='<form method="POST" action="/login"><p>Email:<br><input type="text" name="email"></p><p>Password:<br><input type="text" name="password"></p><p><input type="submit" name="Sign in"></p></form><a href="#join">Join</a>';
+}
+return __p;
+};
+
+},{"underscore":5}],14:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='<h1>Profile</h1><ul><li>'+
+((__t=( user.get('_id') ))==null?'':__t)+
+'</li><li>'+
+((__t=( user.get('username') ))==null?'':__t)+
+'</li><li>'+
+((__t=( user.get('email') ))==null?'':__t)+
+'</li></ul>';
+}
+return __p;
+};
+
+},{"underscore":5}],15:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -12390,7 +12420,7 @@ __p+='</p></form>';
 return __p;
 };
 
-},{"underscore":5}],14:[function(require,module,exports){
+},{"underscore":5}],16:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -12420,7 +12450,7 @@ __p+='';
 return __p;
 };
 
-},{"underscore":5}],15:[function(require,module,exports){
+},{"underscore":5}],17:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -12436,93 +12466,172 @@ __p+='<h1>Shout</h1><ul><li>'+
 return __p;
 };
 
-},{"underscore":5}],16:[function(require,module,exports){
-'use strict';
-
-var $ = require('jquery');
-var Backbone = require('backbone');
-Backbone.$ = $;
-
-
-var Home = Backbone.View.extend({
-
-    el: '#app',
-
-    initialize: function () {
-        this.render();
-    },
-
-    render: function () {
-      $('#app').html('Welcome home Man.');
-    }
-});
-
-
-module.exports = function() {
-  new Home();
+},{"underscore":5}],18:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='<h1>Users</h1><hr>';
+ _.each(users, function (user) { 
+__p+='<div class="user"><div class="user-body"><b>'+
+((__t=( user.get('_id') ))==null?'':__t)+
+':</b>'+
+((__t=( user.get('username') ))==null?'':__t)+
+'</div><div class="user-footer"><a href="#users/'+
+((__t=( user.get('_id') ))==null?'':__t)+
+'">View</a> | <a href="#users/'+
+((__t=( user.get('_id') ))==null?'':__t)+
+'/edit">Edit</a> |</div></div><hr>';
+ }); 
+__p+='';
+}
+return __p;
 };
 
-},{"backbone":2,"jquery":4}],17:[function(require,module,exports){
+},{"underscore":5}],19:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
-var template = require('../templates/auth/join.html');
-var models = require('../models/user.js');
+var template = require('../templates/home.html');
 
-var Join = Backbone.View.extend({
+var Home = Backbone.View.extend({
     el: '#app',
-    events: {
-      'submit': 'save'
-    },
     initialize: function () {
         this.render();
     },
     render: function () {
       this.$el.html(template());
-    },
-    save: function() {
-      var data = $('#foo').serializeObject();
-      var user = new models.User();
-      user.save(data, {
-          success: function () {
-            window.router.navigate('', {trigger: true});
-          }
-      });
-      return false;
     }
+});
+
+module.exports = function() {
+  new Home();
+};
+
+},{"../templates/home.html":11,"backbone":2,"jquery":4}],20:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = $;
+
+var template = require('../templates/join.html');
+var models = require('../models/user.js');
+
+require('../lib/serialize-object.js')();
+
+var Join = Backbone.View.extend({
+  el: '#app',
+  events: {
+    'submit': 'save'
+  },
+  initialize: function () {
+      this.render();
+  },
+  render: function () {
+    this.$el.html(template());
+  },
+  save: function() {
+    var data = $('#join-form').serializeObject();
+    var user = new models.User();
+    user.save(data, {
+      success: function (obj) {
+        var errorMsg = obj.get('error');
+        if (errorMsg) {
+          console.log(errorMsg);
+          $('#msg').html(errorMsg);
+        }else{
+          window.router.navigate('', {trigger: true});
+        }
+      }
+    });
+    return false;
+  }
 });
 
 module.exports = function() {
   new Join();
 };
 
-},{"../models/user.js":8,"../templates/auth/join.html":10,"backbone":2,"jquery":4}],18:[function(require,module,exports){
+},{"../lib/serialize-object.js":6,"../models/user.js":8,"../templates/join.html":12,"backbone":2,"jquery":4}],21:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
-var template = require('../templates/auth/login.html');
+// var model = require('../models/auth.js');
+
+var template = require('../templates/login.html');
 
 var Login = Backbone.View.extend({
+    // model: new model(),
     el: '#app',
     initialize: function () {
         this.render();
     },
     render: function () {
       this.$el.html(template());
-    }
+    },
+    // login: function () {
+    //     this.model.save({username: this.$el.find('#username'),
+    //         password: this.$el.find('#password')}, {
+    //         success: function () {
+    //             /* update the view now */
+    //         },
+    //         error: function () {
+    //             /* handle the error code here */
+    //         }
+    //     });
+    // }
 });
 
 module.exports = function() {
   new Login();
 };
 
-},{"../templates/auth/login.html":11,"backbone":2,"jquery":4}],19:[function(require,module,exports){
+
+
+//  $(function () {
+//     var LoginView = Backbone.View.extend({
+//         model: new App.Model.authentication(),
+//         el: $("#login-form"),
+//         events: {
+//             "click #login": "login"
+//         },
+
+//         login: function () {
+//             this.model.save({username: this.$el.find("#username"),
+//                 password: this.$el.find("#password")}, {
+//                 success: function () {
+//                     /* update the view now */
+//                 },
+//                 error: function () {
+//                     /* handle the error code here */
+//                 }
+//             });
+//         }
+//     });
+// }
+
+
+
+// checkUser: function(callback) {
+//      $.ajax('api/auth/logged_in', {
+//        type: 'GET',
+//        dataType: 'json',
+//        success: function() {
+//          return callback(true);
+//        },
+//        error: function() {
+//          return callback(false);
+//        }
+//      });
+//   }
+},{"../templates/login.html":13,"backbone":2,"jquery":4}],22:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
@@ -12530,20 +12639,48 @@ var Backbone = require('backbone');
 Backbone.$ = $;
 
 exports.faq = function() {
-  var template = require('../templates/pages/faq.html');
+  var template = require('../templates/faq.html');
   $('#app').html(template({foo: 'bar'}));
 };
 
-},{"../templates/pages/faq.html":12,"backbone":2,"jquery":4}],20:[function(require,module,exports){
+},{"../templates/faq.html":10,"backbone":2,"jquery":4}],23:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
-require('../lib/serialize-object.js')();
+
+var models = require('../models/user.js');
+var template = require('../templates/profile.html');
+
+var Profile = Backbone.View.extend({
+    el: '#app',
+    initialize: function (options) {
+        this.render(options);
+    },
+    render: function (options) {
+      var that = this;
+      var users = new models.User({id: options.id});
+      users.fetch({
+        success: function (data) {
+          that.$el.html(template({ user: data }));
+        }
+      });
+    },
+});
+
+module.exports = function(id) {
+  new Profile({id: id});
+};
+},{"../models/user.js":8,"../templates/profile.html":14,"backbone":2,"jquery":4}],24:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = $;
 
 var models = require('../models/shout.js');
-
+require('../lib/serialize-object.js')();
 
 var Index = Backbone.View.extend({
     el: '#app',
@@ -12568,13 +12705,13 @@ var Index = Backbone.View.extend({
         }
       });
     },
-    like: function (e) {
-      var id = $(e.currentTarget).data('like');
+    like: function (ev) {
+      var id = $(ev.currentTarget).data('like');
       window.alert('we made it here:' + id);
       return false;
     },
-    toggleReply: function (e) {
-      var id = $(e.currentTarget).data('reply-link');
+    toggleReply: function (ev) {
+      var id = $(ev.currentTarget).data('reply-link');
       $('[data-reply-form="' + id + '"]').toggle();
       return false;
     }
@@ -12605,8 +12742,8 @@ var Edit = Backbone.View.extend({
       this.$el.html(template({shout: null}));
     }
   },
-  save: function(e) {
-    e.preventDefault();
+  save: function(ev) {
+    ev.preventDefault();
     var data = $('#foo').serializeObject();
     var shout = new models.Shout();
     shout.save(data, {
@@ -12658,4 +12795,34 @@ exports.show = function(id) {
 
 
 
-},{"../lib/serialize-object.js":6,"../models/shout.js":7,"../templates/shouts/edit.html":13,"../templates/shouts/index.html":14,"../templates/shouts/show.html":15,"backbone":2,"jquery":4}]},{},[1]);
+},{"../lib/serialize-object.js":6,"../models/shout.js":7,"../templates/shouts/edit.html":15,"../templates/shouts/index.html":16,"../templates/shouts/show.html":17,"backbone":2,"jquery":4}],25:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
+var Backbone = require('backbone');
+Backbone.$ = $;
+
+var models = require('../models/user.js');
+var template = require('../templates/users-index.html');
+
+var UserList = Backbone.View.extend({
+    el: '#app',
+    initialize: function () {
+        this.render();
+    },
+    render: function () {
+      var that = this;
+      var users = new models.Users();
+      users.fetch({
+        success: function (users) {
+          that.$el.html(template({ users: users.models }));
+        }
+      });
+    },
+});
+
+module.exports = function() {
+  new UserList();
+};
+
+},{"../models/user.js":8,"../templates/users-index.html":18,"backbone":2,"jquery":4}]},{},[1]);

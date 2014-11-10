@@ -1,0 +1,14 @@
+<h1>Users</h1>
+<hr>
+<% _.each(users, function (user) { %>
+    <div class="user">
+        <div class="user-body">
+            <b><%= user.get('_id') %>:</b><%= user.get('username') %>
+        </div>
+        <div class="user-footer">
+            <a href="#users/<%= user.get('_id') %>">View</a> |
+            <a href="#users/<%= user.get('_id') %>/edit">Edit</a> |
+        </div>
+    </div>
+    <hr>
+<% }); %>

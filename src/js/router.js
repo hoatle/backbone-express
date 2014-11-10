@@ -25,6 +25,10 @@ module.exports = Backbone.Router.extend({
     'login': require('./views/login'),
     'join': require('./views/join'),
 
+    'users': require('./views/users-index'),
+    'users/:id': require('./views/profile'),
+
+
   }
 
 });
