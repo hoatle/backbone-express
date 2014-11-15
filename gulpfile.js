@@ -44,7 +44,9 @@ gulp.task('browserify', function() {
 
 gulp.task('server', function() {
   return nodemon({
-    script: 'server.js'  });
+    script: 'server.js',
+    ignore: ['src/js/*', 'public/*', 'README.md', 'Procfile']
+  });
 });
 
 gulp.task('watch', function() {
