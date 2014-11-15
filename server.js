@@ -1,4 +1,4 @@
-'use strict'; 
+'use strict';
 
 var express      = require('express');
 var session      = require('express-session');
@@ -58,4 +58,6 @@ require('./api/users')(app);
 require('./api/auth')(app);
 
 
-app.listen(3000);
+app.listen(app.get('port'), function() {
+  return console.log('backbone-express web server is listening on port: ' + app.get('port') + '\nPress CTRL+C to stop it.')
+});
