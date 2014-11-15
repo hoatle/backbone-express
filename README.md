@@ -7,3 +7,19 @@ We are using:
 - gulp to build
 - browserify for modules on frontend
 - no BOWER.  we're using npm for everything
+
+
+How to run
+----------
+
+- Copy .env.sample to .env and edit any settings if you want
+
+- Run `$ node server.js`
+
+
+How to develop
+--------------
+
+- Copy .env.sample to .env and edit any settings if you want
+
+- Run `$ gulp` to watch and start the server
