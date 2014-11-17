@@ -12290,18 +12290,16 @@ module.exports = {
 'use strict';
 
 var $ = require('jquery');
+var _ = require('underscore');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
+var currentUser;
 
 /**
  * UsernamePasswordToken model class
  */
 var UsernamePasswordToken = Backbone.Model.extend({
-
-    initialize: function() {
-    //init username, password, rememberMe
-    },
 
     getPrinciple: function () {
         return this.getUsername();
@@ -12347,6 +12345,11 @@ var UsernamePasswordToken = Backbone.Model.extend({
  */
 var User = Backbone.Model.extend({
     urlRoot: '/api/users',
+
+    initialize: function() {
+        this.on('change:principles', this.onPrinciplesChange);
+    },
+
     /**
      * Gets primary principle
      */
@@ -12359,6 +12362,11 @@ var User = Backbone.Model.extend({
      */
     getPrinciples: function () {
         return this.get('principles');
+    },
+
+    onPrinciplesChange: function(model, value, options) {
+        alert('onPrinciplesChange');
+        console.log(arguments);
     },
 
     /**
@@ -12376,24 +12384,63 @@ var User = Backbone.Model.extend({
      *
      * var token = new UsernamePasswordToken(username, password, rememberMe);
      *
-     * currentUser.login(token, function (err, user) {
+     * currentUser.login(token, function (err) {
      *     if (err) {
      *         //handle error here
      *     }
-     *     // successful user here, do something
+     *     // successful logged-in user here, do something
      * });
      *
      * {code}
      *
+     * `login:success` or `login:fail` events will be triggered passing with `user` or `err` arguments accordingly.
+     *
      * @param token Token instance
-     * @param done callback(err, user)
+     * @param done callback(err)
      */
     login: function (token, done) {
         //username just the primary principle here, could be id or email depending on the auth system implementation
-        var username = token.getPrinciple(),
-            password = token.getCredentials();
 
-        //TODO
+        var model = this;
+
+        this.sync('create', token, {
+            url: '/api/auth/login/',
+            attrs: {
+                'email': token.getPrinciple(),
+                'password': token.getPassword()
+            }
+        }).then(function(data, textStatus, xhr) {
+            console.log(data); //message: user authenticated
+            //update currentUser data
+
+            //fetching user info from /api/auth/user
+            model.sync('get', model, {
+                url: '/api/auth/user/'
+            }).then(function(data, textStatus, xhr) {
+                console.log(data);
+
+                var userPrinciples = _.pick(data, '_id', 'avatar', 'email', 'fullName', 'username');
+                User.getUser().set('principles', userPrinciples);
+                //TODO: listen to changes events to update localstorage
+                /*
+                 var localstorage = require('../localstorage');
+                 localstorage.set('user-principles', userPrinciples, true);
+                 */
+                done(null);
+            }, function(xhr, textStatus, errorThrown) {
+                done(_.extend(xhr.responseJSON, {
+                    textStatus: textStatus,
+                    errorThrown: errorThrown
+                }));
+            });
+
+        }, function(xhr, textStatus, errorThrown) {
+            done(_.extend(xhr.responseJSON, {
+                textStatus: textStatus,
+                errorThrown: errorThrown
+            }));
+        });
+
     },
 
     /**
@@ -12428,14 +12475,31 @@ var User = Backbone.Model.extend({
 
 }, {
     /**
-     * Gets current user
+     * Gets current user, always the same user though out the browser session
      *
      * var currentUser = User.getUser();
      */
     getUser: function () {
-        //store currentUser on window.currentUser
-        //if no found, try to get user from cookie['currentUser']
-        //otherwise, return new User instance
+        //try to get user from cookie['currentUser']
+        //otherwise, return new User instance (anonymous user)
+        if (currentUser) {
+            return currentUser;
+        } else {
+            //get from localstorage
+
+
+        }
+
+        //otherwise, return new
+        currentUser = new User();
+        return currentUser;
+    },
+    /**
+     * Saves user to localStorage so that getUser could get it back
+     * @param user
+     */
+    saveUser: function (user) {
+
     }
 });
 
@@ -12448,7 +12512,8 @@ module.exports = {
     User: User,
     Users: Users
 };
-},{"backbone":2,"jquery":3}],8:[function(require,module,exports){
+
+},{"backbone":2,"jquery":3,"underscore":4}],8:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
@@ -12518,7 +12583,7 @@ var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<form method="POST" action="/api/auth/login"><p>Email:<br><input type="text" name="email"></p><p>Password:<br><input type="text" name="password"></p><p><input type="submit" name="Sign in"></p></form><hr><a href="#join">Join</a><hr><a href="/auth/facebook" class="btn btn-facebook"><i class="fa fa-facebook">Facebook</i></a><br><a href="/auth/google" class="btn btn-google"><i class="fa fa-google-plus">Google+</i></a>';
+__p+='<form method="POST" action="/api/auth/login"><p>Email:<br><input type="text" name="email" id="email"></p><p>Password:<br><input type="text" name="password" id="password"></p><p><input type="submit" value="Login" id="login"></p></form><hr><a href="#join">Join</a><hr><a href="/auth/facebook" class="btn btn-facebook"><i class="fa fa-facebook">Facebook</i></a><br><a href="/auth/google" class="btn btn-google"><i class="fa fa-google-plus">Google+</i></a>';
 }
 return __p;
 };
@@ -12706,28 +12771,46 @@ Backbone.$ = $;
 
 // var model = require('../models/auth.js');
 
+var user = require('../models/user');
+
 var template = require('../templates/login.html');
 
 var Login = Backbone.View.extend({
     // model: new model(),
     el: '#app',
+    events: {
+        'click #login': 'login'
+    },
     initialize: function () {
         this.render();
     },
     render: function () {
       this.$el.html(template());
+      //test
+      this.$('#email').val('hoatlevan@gmail.com');
+      this.$('#password').val('123456');
     },
-    // login: function () {
-    //     this.model.save({username: this.$el.find('#username'),
-    //         password: this.$el.find('#password')}, {
-    //         success: function () {
-    //             /* update the view now */
-    //         },
-    //         error: function () {
-    //             /* handle the error code here */
-    //         }
-    //     });
-    // }
+    login: function (event) {
+        event.preventDefault();
+
+        //TODO: validate email + password
+
+        var currentUser = user.User.getUser();
+        var token = new user.UsernamePasswordToken({
+            username: this.$('#email').val(),
+            password: this.$('#password').val()
+        });
+
+        currentUser.login(token, function(err) {
+            if (err) {
+                alert(err.message);
+                return;
+            }
+
+            console.log(currentUser);
+
+        });
+    }
 });
 
 module.exports = function() {
@@ -12772,7 +12855,8 @@ module.exports = function() {
 //        }
 //      });
 //   }
-},{"../templates/login.html":12,"backbone":2,"jquery":3}],21:[function(require,module,exports){
+
+},{"../models/user":7,"../templates/login.html":12,"backbone":2,"jquery":3}],21:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');

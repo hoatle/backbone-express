@@ -25,25 +25,33 @@ module.exports = function(passport) {
       passwordField: 'password'
     },
     function (email, password, done) {
-    return User.findOne({
-      email: email
-    }, function (err, user) {
-      if (err) {
-        return done(err);
-      }
-      if (!user) {
+      console.log('email:' + email);
+      console.log('password:' + password);
+      if (!email || !password) {
         return done(null, false, {
-          message: 'No accounts with that email address.'
+          message: 'Invalid email or password.'
         });
       }
-      if (!user.authenticate(password)) {
-        return done(null, false, {
-          message: 'Incorrect password.'
-        });
-      }
-      return done(null, user);
-    });
-  }));
+      return User.findOne({
+        email: email
+      }, function (err, user) {
+        if (err) {
+          return done(err);
+        }
+        if (!user) {
+          return done(null, false, {
+            message: 'No accounts with that email address.'
+          });
+        }
+        if (!user.authenticate(password)) {
+          return done(null, false, {
+            message: 'Incorrect password.'
+          });
+        }
+        return done(null, user);
+      });
+    })
+  );
 
 
 

@@ -15,9 +15,10 @@ module.exports = function(app) {
     console.log('Cookies: ', req.cookies);
 
      passport.authenticate('local', function(err, user) {
+         console.log(err);
          if (err) return next(err);
          if (!user) {
-             return res.json(403, {
+             return res.status(403).json({
                  message: 'no user found'
              });
          }

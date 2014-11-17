@@ -1,18 +1,16 @@
 'use strict';
 
 var $ = require('jquery');
+var _ = require('underscore');
 var Backbone = require('backbone');
 Backbone.$ = $;
 
+var currentUser;
 
 /**
  * UsernamePasswordToken model class
  */
 var UsernamePasswordToken = Backbone.Model.extend({
-
-    initialize: function() {
-    //init username, password, rememberMe
-    },
 
     getPrinciple: function () {
         return this.getUsername();
@@ -58,6 +56,11 @@ var UsernamePasswordToken = Backbone.Model.extend({
  */
 var User = Backbone.Model.extend({
     urlRoot: '/api/users',
+
+    initialize: function() {
+        this.on('change:principles', this.onPrinciplesChange);
+    },
+
     /**
      * Gets primary principle
      */
@@ -70,6 +73,11 @@ var User = Backbone.Model.extend({
      */
     getPrinciples: function () {
         return this.get('principles');
+    },
+
+    onPrinciplesChange: function(model, value, options) {
+        alert('onPrinciplesChange');
+        console.log(arguments);
     },
 
     /**
@@ -87,24 +95,63 @@ var User = Backbone.Model.extend({
      *
      * var token = new UsernamePasswordToken(username, password, rememberMe);
      *
-     * currentUser.login(token, function (err, user) {
+     * currentUser.login(token, function (err) {
      *     if (err) {
      *         //handle error here
      *     }
-     *     // successful user here, do something
+     *     // successful logged-in user here, do something
      * });
      *
      * {code}
      *
+     * `login:success` or `login:fail` events will be triggered passing with `user` or `err` arguments accordingly.
+     *
      * @param token Token instance
-     * @param done callback(err, user)
+     * @param done callback(err)
      */
     login: function (token, done) {
         //username just the primary principle here, could be id or email depending on the auth system implementation
-        var username = token.getPrinciple(),
-            password = token.getCredentials();
 
-        //TODO
+        var model = this;
+
+        this.sync('create', token, {
+            url: '/api/auth/login/',
+            attrs: {
+                'email': token.getPrinciple(),
+                'password': token.getPassword()
+            }
+        }).then(function(data, textStatus, xhr) {
+            console.log(data); //message: user authenticated
+            //update currentUser data
+
+            //fetching user info from /api/auth/user
+            model.sync('get', model, {
+                url: '/api/auth/user/'
+            }).then(function(data, textStatus, xhr) {
+                console.log(data);
+
+                var userPrinciples = _.pick(data, '_id', 'avatar', 'email', 'fullName', 'username');
+                User.getUser().set('principles', userPrinciples);
+                //TODO: listen to changes events to update localstorage
+                /*
+                 var localstorage = require('../localstorage');
+                 localstorage.set('user-principles', userPrinciples, true);
+                 */
+                done(null);
+            }, function(xhr, textStatus, errorThrown) {
+                done(_.extend(xhr.responseJSON, {
+                    textStatus: textStatus,
+                    errorThrown: errorThrown
+                }));
+            });
+
+        }, function(xhr, textStatus, errorThrown) {
+            done(_.extend(xhr.responseJSON, {
+                textStatus: textStatus,
+                errorThrown: errorThrown
+            }));
+        });
+
     },
 
     /**
@@ -139,14 +186,31 @@ var User = Backbone.Model.extend({
 
 }, {
     /**
-     * Gets current user
+     * Gets current user, always the same user though out the browser session
      *
      * var currentUser = User.getUser();
      */
     getUser: function () {
-        //store currentUser on window.currentUser
-        //if no found, try to get user from cookie['currentUser']
-        //otherwise, return new User instance
+        //try to get user from cookie['currentUser']
+        //otherwise, return new User instance (anonymous user)
+        if (currentUser) {
+            return currentUser;
+        } else {
+            //get from localstorage
+
+
+        }
+
+        //otherwise, return new
+        currentUser = new User();
+        return currentUser;
+    },
+    /**
+     * Saves user to localStorage so that getUser could get it back
+     * @param user
+     */
+    saveUser: function (user) {
+
     }
 });
 
